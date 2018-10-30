@@ -1,36 +1,22 @@
-# History files
-.Rhistory
-.Rapp.history
+# History files importng 
+LSF_data<- read.csv("C:/Users/chuka/Downloads/pub0818.csv")
+View(LSF_data)
+str(LSF_data)
 
-# Session Data files
-.RData
+# Removining unwanted columns
+LSF_data2<-LSF_data[,-c(1,2,3,17,39,40,42,54,55,56)]
+View(LSF_data2)
 
-# Example code in package build process
-*-Ex.R
+# Re-assigning data type and structure
+LSF_data2$PROV <- as.factor(LSF_data2$PROV)
+LSF_data2$CMA <- as.factor(LSF_data2$CMA)
+LSF_data2$LFSSTAT <- as.factor(LSF_data2$LFSSTAT)
+LSF_data2$SEX <- as.factor(LSF_data2$SEX)
+LSF_data2$MARSTAT <- as.factor(LSF_data2$MARSTAT)
+LSF_data2$EDUC <- as.factor(LSF_data2$EDUC)
 
-# Output files from R CMD build
-/*.tar.gz
-
-# Output files from R CMD check
-/*.Rcheck/
-
-# RStudio files
-.Rproj.user/
-
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
-
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
-.httr-oauth
-
-# knitr and R markdown default cache directories
-/*_cache/
-/cache/
-
-# Temporary files created by R markdown
-*.utf8.md
-*.knit.md
-
-# Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
-rsconnect/
+# Initail analysis of Male vs Female highest level of educational qualification using ggplot
+install.packages("ggplot2")
+library(ggplot2)
+ggplot(LSF_data2,aes(x = EDUC, fill = SEX)) + 
+  theme_bw() + geom_bar()
