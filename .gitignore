@@ -71,17 +71,43 @@ ggplot(LSF_D3.2, aes(x=EDUC, y=Income)) +
   theme(plot.title = element_text(hjust = 0.05))
 
 
-
 # Re-assigning data type and structure
-LSF_data2$PROV <- as.factor(LSF_data2$PROV)
-LSF_data2$CMA <- as.factor(LSF_data2$CMA)
-LSF_data2$LFSSTAT <- as.factor(LSF_data2$LFSSTAT)
-LSF_data2$SEX <- as.factor(LSF_data2$SEX)
-LSF_data2$MARSTAT <- as.factor(LSF_data2$MARSTAT)
-LSF_data2$EDUC <- as.factor(LSF_data2$EDUC)
+LSF_D3.2$Province <- as.factor(LSF_D3.2$Province)
+LSF_D3.2$AGE <- as.factor(LSF_D3.2$AGE)
+LSF_D3.2$EDUC <- as.factor(LSF_D3.2$EDUC)
+LSF_D3.2$SEX <- as.factor(LSF_D3.2$SEX)
 
 # Initail analysis of Male vs Female highest level of educational qualification using ggplot
-install.packages("ggplot2")
-library(ggplot2)
-ggplot(LSF_data2,aes(x = EDUC, fill = SEX)) + 
-  theme_bw() + geom_bar()
+
+#Split dataset into "training"(80%) and "test"(20%)
+Ind_LSF <- sample(2,nrow(LSF_D3.2),replace = TRUE,prob = c(0.8,0.2))
+t_lsfdata <- LSF_D3.2[Ind_LSF==1,]
+v_lsfdata <- LSF_D3.2[Ind_LSF==2,]
+
+results <- lm( Income ~ ., data = t_lsfdata )
+summary(results)
+
+results2 <- lm( Income ~ EDUC + ActualHRS,data = t_lsfdata )
+summary(results2)
+
+results3<-lm(Income ~ SEX + EDUC, data=t_lsfdata)
+summary(results3)
+
+results4<-lm(Income ~ SEX + EDUC + ActualHRS, data=t_lsfdata)
+summary(results4)
+
+pred<- predict(results,v_lsfdata)
+
+head(pred)
+
+head(v_lsfdata)
+
+fit <- aov(Income ~ EDUC + SEX, data=LSF_D3.2) 
+
+fit_2 <- aov(Income ~ EDUC + SEX + ActualHRS, data=LSF_D3.2) 
+summary(fit)
+
+anova(results2,results3,results4)
+
+
+
